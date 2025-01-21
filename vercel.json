@@ -6,38 +6,19 @@
             "use": "@vercel/python",
             "config": {
                 "runtime": "python3.9",
-                "maxLambdaSize": "15mb",
-                "includeFiles": [
-                    "templates/**",
-                    "static/**",
-                    "*.db",
-                    "logs/**"
-                ]
+                "maxLambdaSize": "15mb"
             }
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "api/index.py",
-            "headers": {
-                "cache-control": "s-maxage=1, stale-while-revalidate=59",
-                "pragma": "no-cache",
-                "expires": "0"
-            }
+            "dest": "api/index.py"
         }
     ],
     "env": {
-        "FLASK_ENV": "production",
-        "PYTHONPATH": ".",
-        "DEBUG": "1"
-    },
-    "github": {
-        "enabled": true,
-        "silent": false,
-        "autoAlias": true
+        "PYTHONPATH": "."
     },
     "buildCommand": "pip install -r requirements.txt",
-    "outputDirectory": ".",
-    "public": true
+    "outputDirectory": "."
 }
