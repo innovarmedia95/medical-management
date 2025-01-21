@@ -11,7 +11,7 @@
             "src": "/(.*)",
             "dest": "app.py",
             "headers": {
-                "cache-control": "no-cache, no-store, must-revalidate",
+                "cache-control": "s-maxage=1, stale-while-revalidate=59",
                 "pragma": "no-cache",
                 "expires": "0"
             }
@@ -19,6 +19,10 @@
     ],
     "github": {
         "enabled": true,
-        "silent": true
-    }
+        "silent": false,
+        "autoAlias": true
+    },
+    "buildCommand": "pip install -r requirements.txt",
+    "outputDirectory": ".",
+    "public": true
 }
