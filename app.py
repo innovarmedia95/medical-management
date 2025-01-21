@@ -69,17 +69,35 @@ def accueil():
 
 @app.route('/patients')
 def liste_patients():
-    search = request.args.get('search', '')
-    if search:
-        patients = Patient.query.filter(
-            db.or_(
-                Patient.nom.ilike(f'%{search}%'),
-                Patient.prenom.ilike(f'%{search}%')
-            )
-        ).all()
-    else:
-        patients = Patient.query.all()
-    return render_template('patients.html', patients=patients, search=search)
+    # Total Patients
+    total_patients = Patient.query.count()
+    
+    # Nouveaux Patients (last 30 days)
+    nouveaux_patients = Patient.query.filter(
+        Patient.date_naissance >= datetime.now() - timedelta(days=30)
+    ).count()
+    
+    # Patients Actifs (visited in last 90 days)
+    patients_actifs = Patient.query.join(Visite).filter(
+        Visite.date_visite >= datetime.now() - timedelta(days=90)
+    ).distinct().count()
+    
+    # Rendez-vous Aujourd'hui
+    rendez_vous_aujourd_hui = Visite.query.filter(
+        func.date(Visite.date_visite) == datetime.today().date()
+    ).count()
+    
+    # Derniers Patients Ajoutés
+    derniers_patients = Patient.query.order_by(
+        Patient.date_naissance.desc()
+    ).limit(5).all()
+    
+    return render_template('patients.html', 
+                           total_patients=total_patients,
+                           nouveaux_patients=nouveaux_patients,
+                           patients_actifs=patients_actifs,
+                           rendez_vous_aujourd_hui=rendez_vous_aujourd_hui,
+                           derniers_patients=derniers_patients)
 
 @app.route('/patient/nouveau', methods=['GET', 'POST'])
 def nouveau_patient():
