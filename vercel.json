@@ -14,7 +14,7 @@
     ],
     "env": {
         "FLASK_ENV": "production",
-        "DATABASE_URL": "@medical-management-database-url"
+        "PYTHONPATH": "."
     },
     "buildCommand": "pip install -r requirements.txt",
     "outputDirectory": ".",

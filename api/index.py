@@ -1,25 +1,37 @@
-from app import app, db
-from flask import request, jsonify
+from flask import Flask, request, jsonify, render_template
+from app import app as application, db
+import sys
+import os
 
-# This file is specifically for Vercel deployment
-# It ensures the database is properly initialized
+# Ensure the project root is in the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-@app.route('/api/init-db', methods=['GET'])
+# Wrap the main application for Vercel
+def handler(event, context):
+    return {
+        'statusCode': 200,
+        'body': 'Medical Management Application'
+    }
+
+# Ensure routes are accessible
+@application.route('/')
+def index():
+    return render_template('accueil.html')
+
+# Database initialization endpoint
+@application.route('/api/init-db', methods=['GET'])
 def init_database():
     try:
         # Create all tables if they don't exist
-        with app.app_context():
+        with application.app_context():
             db.create_all()
         return jsonify({"status": "Database initialized successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Vercel requires a handler for the main route
-def handler(event, context):
-    return {
-        'statusCode': 200,
-        'body': 'Database initialization endpoint'
-    }
+# Make the application directly callable for Vercel
+def app(environ, start_response):
+    return application(environ, start_response)
 
-# Ensure the app can be imported and used by Vercel
+# Expose the application for Vercel
 __all__ = ['app', 'handler']
