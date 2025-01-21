@@ -1,17 +1,41 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from datetime import datetime, timedelta
-from sqlalchemy import func, and_
-import calendar
-import traceback
-import logging
 import os
+import sys
+import logging
+import traceback
 import dj_database_url
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+# Configure logging early
+logging.basicConfig(
+    level=logging.DEBUG, 
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 logger = logging.getLogger(__name__)
+
+try:
+    from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_migrate import Migrate
+    from sentry_sdk import init as sentry_init
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    from datetime import datetime, timedelta
+    from sqlalchemy import func, and_
+    import calendar
+    import logging
+    import os
+    import dj_database_url
+except Exception as import_error:
+    logger.error(f"Import Error: {import_error}")
+    logger.error(traceback.format_exc())
+    raise
+
+# Initialize Sentry early
+sentry_init(
+    dsn=os.environ.get('SENTRY_DSN', ''),
+    integrations=[FlaskIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'votre_clé_secrète_ici'
