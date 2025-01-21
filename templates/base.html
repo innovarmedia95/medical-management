@@ -4,19 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cabinet Médical - {% block title %}{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Base styles */
+        body {
+            background-color: #f3f4f6;
+        }
+
+        /* Card styles */
+        .stat-card {
+            @apply bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg;
+        }
+
+        .stat-icon {
+            @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl;
+        }
+
+        /* Navigation styles */
+        .nav-link {
+            @apply px-4 py-2 rounded-lg transition-all duration-200;
+        }
+
+        .nav-link:hover {
+            @apply bg-green-50 text-green-600;
+        }
+
+        .nav-link.active {
+            @apply bg-green-100 text-green-700;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
+    <nav class="bg-green-600 shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
                     <div class="flex-shrink-0 flex items-center">
-                        <a href="{{ url_for('accueil') }}" class="text-xl font-bold text-blue-600">
+                        <a href="{{ url_for('accueil') }}" class="text-xl font-bold text-white">
                             <i class="fas fa-hospital-user mr-2"></i>
                             Cabinet Médical
                         </a>
@@ -25,28 +70,28 @@
                     <!-- Primary Navigation -->
                     <div class="hidden md:ml-6 md:flex md:space-x-8">
                         <a href="{{ url_for('accueil') }}" 
-                           class="{% if request.endpoint == 'accueil' %}border-blue-500 text-gray-900{% else %}border-transparent text-gray-500{% endif %} 
-                                  inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                           class="{% if request.endpoint == 'accueil' %}border-white text-white{% else %}border-transparent text-green-100{% endif %} 
+                                  hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-home mr-1"></i> Accueil
                         </a>
                         <a href="{{ url_for('liste_patients') }}"
-                           class="{% if request.endpoint == 'liste_patients' %}border-blue-500 text-gray-900{% else %}border-transparent text-gray-500{% endif %}
-                                  inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                           class="{% if request.endpoint == 'liste_patients' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                                  hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-users mr-1"></i> Patients
                         </a>
                         <a href="{{ url_for('calendrier') }}"
-                           class="{% if request.endpoint == 'calendrier' %}border-blue-500 text-gray-900{% else %}border-transparent text-gray-500{% endif %}
-                                  inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                           class="{% if request.endpoint == 'calendrier' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                                  hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-calendar-alt mr-1"></i> Calendrier
                         </a>
                         <a href="{{ url_for('statistiques') }}"
-                           class="{% if request.endpoint == 'statistiques' %}border-blue-500 text-gray-900{% else %}border-transparent text-gray-500{% endif %}
-                                  inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                           class="{% if request.endpoint == 'statistiques' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                                  hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-chart-bar mr-1"></i> Statistiques
                         </a>
                         <a href="{{ url_for('rapport_financier') }}"
-                           class="{% if request.endpoint == 'rapport_financier' %}border-blue-500 text-gray-900{% else %}border-transparent text-gray-500{% endif %}
-                                  inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                           class="{% if request.endpoint == 'rapport_financier' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                                  hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-file-invoice-dollar mr-1"></i> Finances
                         </a>
                     </div>
@@ -54,7 +99,7 @@
 
                 <!-- Mobile menu button -->
                 <div class="flex items-center md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-green-100 hover:text-white hover:bg-green-700">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -65,28 +110,28 @@
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="{{ url_for('accueil') }}" 
-                   class="{% if request.endpoint == 'accueil' %}bg-blue-50 border-blue-500 text-blue-700{% else %}border-transparent text-gray-500{% endif %}
-                          block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                   class="{% if request.endpoint == 'accueil' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
                     <i class="fas fa-home mr-2"></i> Accueil
                 </a>
                 <a href="{{ url_for('liste_patients') }}"
-                   class="{% if request.endpoint == 'liste_patients' %}bg-blue-50 border-blue-500 text-blue-700{% else %}border-transparent text-gray-500{% endif %}
-                          block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                   class="{% if request.endpoint == 'liste_patients' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
                     <i class="fas fa-users mr-2"></i> Patients
                 </a>
                 <a href="{{ url_for('calendrier') }}"
-                   class="{% if request.endpoint == 'calendrier' %}bg-blue-50 border-blue-500 text-blue-700{% else %}border-transparent text-gray-500{% endif %}
-                          block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                   class="{% if request.endpoint == 'calendrier' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
                     <i class="fas fa-calendar-alt mr-2"></i> Calendrier
                 </a>
                 <a href="{{ url_for('statistiques') }}"
-                   class="{% if request.endpoint == 'statistiques' %}bg-blue-50 border-blue-500 text-blue-700{% else %}border-transparent text-gray-500{% endif %}
-                          block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                   class="{% if request.endpoint == 'statistiques' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
                     <i class="fas fa-chart-bar mr-2"></i> Statistiques
                 </a>
                 <a href="{{ url_for('rapport_financier') }}"
-                   class="{% if request.endpoint == 'rapport_financier' %}bg-blue-50 border-blue-500 text-blue-700{% else %}border-transparent text-gray-500{% endif %}
-                          block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                   class="{% if request.endpoint == 'rapport_financier' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
                     <i class="fas fa-file-invoice-dollar mr-2"></i> Finances
                 </a>
             </div>
