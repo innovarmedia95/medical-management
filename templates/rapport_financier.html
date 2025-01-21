@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Rapport Financier{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Rapport Financier - {{ nom_mois }} {{ annee }}</h2>
+
+    <!-- Sélecteur de période -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="mois" class="form-label">Mois</label>
+                    <select class="form-select" id="mois" name="mois">
+                        {% for m in range(1, 13) %}
+                        <option value="{{ m }}" {% if m == mois %}selected{% endif %}>
+                            {{ m }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="annee" class="form-label">Année</label>
+                    <select class="form-select" id="annee" name="annee">
+                        {% for a in range(annee-5, annee+1) %}
+                        <option value="{{ a }}" {% if a == annee %}selected{% endif %}>
+                            {{ a }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Afficher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Résumé financier -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Revenus</h5>
+                    <p class="card-text display-6">{{ "%.2f"|format(total_revenus) }}€</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Montant Non Payé</h5>
+                    <p class="card-text display-6">{{ "%.2f"|format(total_non_paye) }}€</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Nombre de Visites</h5>
+                    <p class="card-text display-6">{{ visites|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste détaillée des visites -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Détail des Visites</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visite in visites %}
+                        <tr>
+                            <td>{{ visite.date_visite.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ visite.patient.nom }} {{ visite.patient.prenom }}</td>
+                            <td>{{ "%.2f"|format(visite.montant) }}€</td>
+                            <td>
+                                {% if visite.paye %}
+                                <span class="badge bg-success">Payé</span>
+                                {% else %}
+                                <span class="badge bg-danger">Non payé</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton d'export -->
+    <div class="mt-4">
+        <button class="btn btn-success" onclick="exporterPDF()">
+            <i class="fas fa-file-pdf"></i> Exporter en PDF
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function exporterPDF() {
+    // À implémenter : fonctionnalité d'export PDF
+    alert('Fonctionnalité d\'export PDF à venir');
+}
+</script>
+{% endblock %}

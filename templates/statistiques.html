@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Statistiques du Cabinet</h2>
+
+    <div class="row">
+        <!-- Statistiques des visites -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Statistiques des Visites</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Total des visites</span>
+                                <span class="badge bg-primary rounded-pill">{{ total_visites }}</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Visites ce mois</span>
+                                <span class="badge bg-success rounded-pill">{{ visites_mois }}</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Nouveaux patients ce mois</span>
+                                <span class="badge bg-info rounded-pill">{{ patients_mois }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques financières -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Statistiques Financières</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Revenus totaux</span>
+                                <span class="badge bg-success">{{ "%.2f"|format(revenus_total) }}€</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Revenus ce mois</span>
+                                <span class="badge bg-info">{{ "%.2f"|format(revenus_mois) }}€</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Moyenne par visite</span>
+                                <span class="badge bg-primary">
+                                    {{ "%.2f"|format(revenus_total / total_visites if total_visites > 0 else 0) }}€
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Évolution des Visites</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="visitesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Exemple de graphique - À adapter avec les données réelles
+const ctx = document.getElementById('visitesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'],
+        datasets: [{
+            label: 'Nombre de visites',
+            data: [12, 19, 3, 5, 2, 3],
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

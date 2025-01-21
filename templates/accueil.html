@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Patients</h5>
+                    <p class="card-text display-4">{{ total_patients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Visites Aujourd'hui</h5>
+                    <p class="card-text display-4">{{ visites_aujourdhui }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Revenus du Mois</h5>
+                    <p class="card-text display-4">{{ revenus_mois }}€</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Actions Rapides</h5>
+                    <div class="list-group">
+                        <a href="{{ url_for('nouveau_patient') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-plus"></i> Nouveau Patient
+                        </a>
+                        <a href="{{ url_for('calendrier') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-calendar-alt"></i> Calendrier des Rendez-vous
+                        </a>
+                        <a href="{{ url_for('statistiques') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-chart-bar"></i> Statistiques
+                        </a>
+                        <a href="{{ url_for('rapport_financier') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-invoice-dollar"></i> Rapport Financier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recherche Patient</h5>
+                    <form action="{{ url_for('liste_patients') }}" method="GET">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Rechercher un patient..." name="search">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Rechercher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Nouveau Patient{% endblock %}
+
+{% block content %}
+<h2>Ajouter un Nouveau Patient</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" required>
+    </div>
+    <div class="mb-3">
+        <label for="prenom" class="form-label">Prénom</label>
+        <input type="text" class="form-control" id="prenom" name="prenom" required>
+    </div>
+    <div class="mb-3">
+        <label for="date_naissance" class="form-label">Date de Naissance</label>
+        <input type="date" class="form-control" id="date_naissance" name="date_naissance" required>
+    </div>
+    <div class="mb-3">
+        <label for="telephone" class="form-label">Téléphone</label>
+        <input type="tel" class="form-control" id="telephone" name="telephone">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{{ url_for('liste_patients') }}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

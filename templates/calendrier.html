@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Calendrier des Rendez-vous{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Calendrier des Rendez-vous - {{ nom_mois }} {{ annee }}</h2>
+    
+    <div class="mb-4">
+        <a href="{{ url_for('calendrier', annee=annee-1 if mois==12 else annee, mois=12 if mois==1 else mois-1) }}" 
+           class="btn btn-primary">
+            <i class="fas fa-chevron-left"></i> Mois Précédent
+        </a>
+        <a href="{{ url_for('calendrier', annee=annee+1 if mois==12 else annee, mois=1 if mois==12 else mois+1) }}" 
+           class="btn btn-primary">
+            Mois Suivant <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Lundi</th>
+                        <th>Mardi</th>
+                        <th>Mercredi</th>
+                        <th>Jeudi</th>
+                        <th>Vendredi</th>
+                        <th>Samedi</th>
+                        <th>Dimanche</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for semaine in calendrier %}
+                    <tr>
+                        {% for jour in semaine %}
+                        <td style="height: 120px; {% if jour == 0 %}background-color: #f8f9fa;{% endif %}">
+                            {% if jour != 0 %}
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">{{ jour }}</span>
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                            onclick="ajouterRendezVous('{{ annee }}-{{ '%02d'|format(mois) }}-{{ '%02d'|format(jour) }}')">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    {% for visite in visites %}
+                                        {% if visite.date_visite.day == jour %}
+                                        <div class="p-1 mb-1 bg-info text-white rounded">
+                                            {{ visite.patient.nom }} {{ visite.patient.prenom }}
+                                            <br>
+                                            <small>{{ visite.date_visite.strftime('%H:%M') }}</small>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un rendez-vous -->
+<div class="modal fade" id="rendezVousModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nouveau Rendez-vous</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="rendezVousForm" method="POST">
+                    <input type="hidden" id="date_visite" name="date_visite">
+                    <div class="mb-3">
+                        <label for="patient" class="form-label">Patient</label>
+                        <select class="form-select" id="patient" name="patient_id" required>
+                            {% for patient in patients %}
+                            <option value="{{ patient.id }}">{{ patient.nom }} {{ patient.prenom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="heure" class="form-label">Heure</label>
+                        <input type="time" class="form-control" id="heure" name="heure" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('rendezVousForm').submit()">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterRendezVous(date) {
+    document.getElementById('date_visite').value = date;
+    var modal = new bootstrap.Modal(document.getElementById('rendezVousModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+git init
+git add .
+git config --global user.email "inovarmedia95@gmail.com"
+git config --global user.name "hamza"
+git commit -m "Initial commit"Flask==2.2.5
+Flask-SQLAlchemy==3.0.2
+SQLAlchemy==1.4.41
+Werkzeug==2.2.3
+python-dotenv==1.0.0
+gunicorn==21.2.0

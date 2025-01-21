@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Nouvelle Ordonnance{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Nouvelle Ordonnance</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Patient: {{ visite.patient.nom }} {{ visite.patient.prenom }}</h5>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="contenu" class="form-label">Observations / Diagnostic</label>
+                    <textarea class="form-control" id="contenu" name="contenu" rows="3" required></textarea>
+                </div>
+
+                <div id="medicaments">
+                    <h5 class="mb-3">Médicaments</h5>
+                    <div class="medicament-item mb-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Médicament</label>
+                                <input type="text" class="form-control" name="medicament[]" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Posologie</label>
+                                <input type="text" class="form-control" name="posologie[]" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Durée</label>
+                                <input type="text" class="form-control" name="duree[]">
+                            </div>
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="supprimerMedicament(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary mb-3" onclick="ajouterMedicament()">
+                    <i class="fas fa-plus"></i> Ajouter un médicament
+                </button>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Enregistrer l'ordonnance</button>
+                    <a href="{{ url_for('liste_patients') }}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterMedicament() {
+    const template = document.querySelector('.medicament-item').cloneNode(true);
+    template.querySelectorAll('input').forEach(input => input.value = '');
+    document.getElementById('medicaments').appendChild(template);
+}
+
+function supprimerMedicament(button) {
+    const items = document.querySelectorAll('.medicament-item');
+    if (items.length > 1) {
+        button.closest('.medicament-item').remove();
+    }
+}
+</script>
+{% endblock %}
