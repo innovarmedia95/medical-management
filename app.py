@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import datetime, timedelta
 from sqlalchemy import func, and_
 import calendar
 import traceback
 import logging
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -12,10 +14,11 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'votre_clé_secrète_ici'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cabinet_medical.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Modèle Patient
 class Patient(db.Model):
