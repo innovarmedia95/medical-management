@@ -6,7 +6,12 @@
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "15mb",
-                "runtime": "python3.9"
+                "runtime": "python3.9",
+                "includeFiles": [
+                    "templates/**",
+                    "static/**",
+                    "*.db"
+                ]
             }
         }
     ],
@@ -18,7 +23,8 @@
     ],
     "env": {
         "FLASK_ENV": "production",
-        "PYTHONPATH": "."
+        "PYTHONPATH": ".",
+        "DATABASE_URL": "sqlite:///cabinet_medical.db"
     },
     "buildCommand": "pip install -r requirements.txt",
     "outputDirectory": ".",

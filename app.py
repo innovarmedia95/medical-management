@@ -5,16 +5,23 @@ from datetime import datetime, timedelta
 from sqlalchemy import func, and_
 import calendar
 
+# Determine the base directory
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'cabinet_medical.db')
+
 # Create Flask app
 app = Flask(__name__)
 
 # Configure database
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key_for_medical_management')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{DB_PATH}')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
+# Ensure the database directory exists
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 # Modèle Patient
 class Patient(db.Model):
