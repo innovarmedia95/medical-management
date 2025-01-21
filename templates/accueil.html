@@ -3,69 +3,173 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Total Patients</h5>
-                    <p class="card-text display-4">{{ total_patients }}</p>
+<div class="container mx-auto px-4">
+    <!-- Header Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-home text-blue-600 mr-2"></i>Tableau de bord
+        </h1>
+        <p class="text-gray-600">Bienvenue dans votre espace de gestion médicale</p>
+    </div>
+
+    <!-- Stats Cards Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <!-- Patients Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 mr-4">
+                    <i class="fas fa-users text-blue-500 text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Total Patients</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_patients }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Visites Aujourd'hui</h5>
-                    <p class="card-text display-4">{{ visites_aujourdhui }}</p>
+
+        <!-- Appointments Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 mr-4">
+                    <i class="fas fa-calendar-check text-green-500 text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Rendez-vous Aujourd'hui</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ visites_aujourdhui }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-info">
-                <div class="card-body">
-                    <h5 class="card-title">Revenus du Mois</h5>
-                    <p class="card-text display-4">{{ revenus_mois }}€</p>
+
+        <!-- Revenue Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 mr-4">
+                    <i class="fas fa-money-bill-wave text-purple-500 text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Revenus du Mois</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ revenus_mois }} DH</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 mr-4">
+                    <i class="fas fa-calendar-alt text-yellow-500 text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">RDV à Venir</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ rdv_a_venir }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Actions Rapides</h5>
-                    <div class="list-group">
-                        <a href="{{ url_for('nouveau_patient') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-user-plus"></i> Nouveau Patient
-                        </a>
-                        <a href="{{ url_for('calendrier') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-calendar-alt"></i> Calendrier des Rendez-vous
-                        </a>
-                        <a href="{{ url_for('statistiques') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-chart-bar"></i> Statistiques
-                        </a>
-                        <a href="{{ url_for('rapport_financier') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-invoice-dollar"></i> Rapport Financier
-                        </a>
-                    </div>
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Quick Actions Section -->
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-bolt text-yellow-500 mr-2"></i>Actions Rapides
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <a href="{{ url_for('nouveau_patient') }}" class="block w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition duration-200">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                <i class="fas fa-user-plus text-blue-500"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-blue-700">Nouveau Patient</p>
+                                <p class="text-sm text-blue-600">Ajouter un nouveau dossier patient</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('calendrier') }}" class="block w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition duration-200">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                                <i class="fas fa-calendar-plus text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-green-700">Nouveau Rendez-vous</p>
+                                <p class="text-sm text-green-600">Planifier une consultation</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('rapport_financier') }}" class="block w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-line text-purple-500"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-purple-700">Rapport Financier</p>
+                                <p class="text-sm text-purple-600">Voir les statistiques financières</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Recherche Patient</h5>
-                    <form action="{{ url_for('liste_patients') }}" method="GET">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Rechercher un patient..." name="search">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-search"></i> Rechercher
-                            </button>
-                        </div>
-                    </form>
-                </div>
+
+        <!-- Recent Visits Section -->
+        <div class="lg:col-span-2 bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-history text-blue-500 mr-2"></i>Dernières Visites
+                </h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for visite in dernieres_visites %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ visite.date_visite.strftime('%d/%m/%Y') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <i class="fas fa-user text-gray-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ visite.patient.prenom }} {{ visite.patient.nom }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ visite.montant }} DH
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if visite.paye %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Payé
+                                </span>
+                                {% else %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    En attente
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -73,5 +177,46 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* Smooth transitions */
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+    
+    /* Hover effects */
+    .hover\:shadow-lg:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Card animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to cards
+    const cards = document.querySelectorAll('.bg-white');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        setTimeout(() => {
+            card.style.animation = 'fadeInUp 0.5s ease-out forwards';
+        }, index * 100);
+    });
+});
+</script>
 {% endblock %}
