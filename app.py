@@ -7,6 +7,7 @@ import calendar
 import traceback
 import logging
 import os
+import dj_database_url
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -14,7 +15,13 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'votre_clé_secrète_ici'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
+
+# Database configuration
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
+if database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -28,7 +35,7 @@ class Patient(db.Model):
     date_naissance = db.Column(db.Date, nullable=False)
     telephone = db.Column(db.String(20))
     email = db.Column(db.String(120))
-    date_creation = db.Column(db.DateTime, default=datetime.utcnow)
+    date_creation = db.Column(db.DateTime, nullable=True)
     visites = db.relationship('Visite', backref='patient', lazy=True)
     ordonnances = db.relationship('Ordonnance', backref='patient', lazy=True)
 

@@ -2,27 +2,21 @@
     "version": 2,
     "builds": [
         {
-            "src": "app.py",
+            "src": "api/index.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "app.py",
-            "headers": {
-                "cache-control": "s-maxage=1, stale-while-revalidate=59",
-                "pragma": "no-cache",
-                "expires": "0"
-            }
+            "dest": "api/index.py"
         }
     ],
-    "github": {
-        "enabled": true,
-        "silent": false,
-        "autoAlias": true
+    "env": {
+        "FLASK_ENV": "production",
+        "DATABASE_URL": "@medical-management-database-url"
     },
-    "buildCommand": "pip install -r requirements.txt && flask db upgrade",
+    "buildCommand": "pip install -r requirements.txt",
     "outputDirectory": ".",
     "public": true
 }
