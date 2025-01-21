@@ -1,55 +1,20 @@
 import os
-import sys
-import logging
-import traceback
-import dj_database_url
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
+from sqlalchemy import func, and_
+import calendar
 
-# Configure logging early
-logging.basicConfig(
-    level=logging.DEBUG, 
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-logger = logging.getLogger(__name__)
-
-try:
-    from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-    from flask_sqlalchemy import SQLAlchemy
-    from flask_migrate import Migrate
-    from sentry_sdk import init as sentry_init
-    from sentry_sdk.integrations.flask import FlaskIntegration
-    from datetime import datetime, timedelta
-    from sqlalchemy import func, and_
-    import calendar
-    import logging
-    import os
-    import dj_database_url
-except Exception as import_error:
-    logger.error(f"Import Error: {import_error}")
-    logger.error(traceback.format_exc())
-    raise
-
-# Initialize Sentry early
-sentry_init(
-    dsn=os.environ.get('SENTRY_DSN', ''),
-    integrations=[FlaskIntegration()],
-    traces_sample_rate=1.0,
-    send_default_pii=True
-)
-
+# Create Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'votre_clé_secrète_ici'
 
-# Database configuration
-database_url = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
-if database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://')
-
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+# Configure database
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///cabinet_medical.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Initialize SQLAlchemy
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 
 # Modèle Patient
 class Patient(db.Model):
@@ -96,10 +61,8 @@ def accueil():
     try:
         # Statistiques pour la page d'accueil
         total_patients = Patient.query.count()
-        logger.debug(f"Total Patients: {total_patients}")
         
         visites_aujourdhui = Visite.query.filter(func.date(Visite.date_visite) == datetime.today().date()).count()
-        logger.debug(f"Today's Appointments: {visites_aujourdhui}")
         
         revenus_mois = db.session.query(func.sum(Visite.montant)).filter(
             and_(
@@ -107,15 +70,12 @@ def accueil():
                 Visite.paye == True
             )
         ).scalar() or 0
-        logger.debug(f"Monthly Revenue: {revenus_mois}")
         
         return render_template('accueil.html', 
                              total_patients=total_patients,
                              visites_aujourdhui=visites_aujourdhui,
                              revenus_mois=revenus_mois)
     except Exception as e:
-        logger.error(f"Error in accueil route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/patients')
@@ -123,31 +83,26 @@ def liste_patients():
     try:
         # Total Patients
         total_patients = Patient.query.count()
-        logger.debug(f"Total Patients: {total_patients}")
         
         # Nouveaux Patients (last 30 days)
         nouveaux_patients = Patient.query.filter(
             Patient.date_creation >= datetime.now() - timedelta(days=30)
         ).count()
-        logger.debug(f"New Patients: {nouveaux_patients}")
         
         # Patients Actifs (visited in last 90 days)
         patients_actifs = db.session.query(Patient).join(Visite).filter(
             Visite.date_visite >= datetime.now() - timedelta(days=90)
         ).distinct().count()
-        logger.debug(f"Active Patients: {patients_actifs}")
         
         # Rendez-vous Aujourd'hui
         rendez_vous_aujourd_hui = Visite.query.filter(
             func.date(Visite.date_visite) == datetime.today().date()
         ).count()
-        logger.debug(f"Today's Appointments: {rendez_vous_aujourd_hui}")
         
         # Derniers Patients Ajoutés
         derniers_patients = Patient.query.order_by(
             Patient.date_creation.desc()
         ).limit(5).all()
-        logger.debug(f"Last Patients: {len(derniers_patients)}")
         
         return render_template('patients.html', 
                                total_patients=total_patients,
@@ -156,8 +111,6 @@ def liste_patients():
                                rendez_vous_aujourd_hui=rendez_vous_aujourd_hui,
                                derniers_patients=derniers_patients)
     except Exception as e:
-        logger.error(f"Error in liste_patients route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/patient/nouveau', methods=['GET', 'POST'])
@@ -178,8 +131,6 @@ def nouveau_patient():
             return redirect(url_for('liste_patients'))
         return render_template('nouveau_patient.html')
     except Exception as e:
-        logger.error(f"Error in nouveau_patient route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/visite/nouvelle/<int:patient_id>', methods=['GET', 'POST'])
@@ -218,8 +169,6 @@ def nouvelle_visite(patient_id):
                              patient=patient,
                              today=datetime.now().strftime('%Y-%m-%d'))
     except Exception as e:
-        logger.error(f"Error in nouvelle_visite route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/calendrier')
@@ -249,8 +198,6 @@ def calendrier():
                              mois=mois,
                              nom_mois=calendar.month_name[mois])
     except Exception as e:
-        logger.error(f"Error in calendrier route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/statistiques')
@@ -258,16 +205,13 @@ def statistiques():
     try:
         # Statistiques des visites
         total_visites = Visite.query.count()
-        logger.debug(f"Total Visits: {total_visites}")
         
         visites_mois = Visite.query.filter(
             func.strftime('%Y-%m', Visite.date_visite) == datetime.now().strftime('%Y-%m')
         ).count()
-        logger.debug(f"Monthly Visits: {visites_mois}")
         
         # Statistiques financières
         revenus_total = db.session.query(func.sum(Visite.montant)).filter(Visite.paye == True).scalar() or 0
-        logger.debug(f"Total Revenue: {revenus_total}")
         
         revenus_mois = db.session.query(func.sum(Visite.montant)).filter(
             and_(
@@ -275,13 +219,11 @@ def statistiques():
                 Visite.paye == True
             )
         ).scalar() or 0
-        logger.debug(f"Monthly Revenue: {revenus_mois}")
         
         # Patients par mois
         patients_mois = Patient.query.filter(
             func.strftime('%Y-%m', Patient.id) == datetime.now().strftime('%Y-%m')
         ).count()
-        logger.debug(f"Monthly Patients: {patients_mois}")
         
         return render_template('statistiques.html',
                              total_visites=total_visites,
@@ -290,8 +232,6 @@ def statistiques():
                              revenus_mois=revenus_mois,
                              patients_mois=patients_mois)
     except Exception as e:
-        logger.error(f"Error in statistiques route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/ordonnances/nouvelle/<int:visite_id>', methods=['GET', 'POST'])
@@ -326,8 +266,6 @@ def nouvelle_ordonnance(visite_id):
             return redirect(url_for('liste_patients'))
         return render_template('nouvelle_ordonnance.html', visite=visite)
     except Exception as e:
-        logger.error(f"Error in nouvelle_ordonnance route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/rapports/financier')
@@ -351,10 +289,8 @@ def rapport_financier():
         ).all()
         
         total_revenus = sum(v.montant for v in visites if v.paye)
-        logger.debug(f"Total Revenue: {total_revenus}")
         
         total_non_paye = sum(v.montant for v in visites if not v.paye)
-        logger.debug(f"Total Unpaid: {total_non_paye}")
         
         return render_template('rapport_financier.html',
                              visites=visites,
@@ -363,8 +299,6 @@ def rapport_financier():
                              mois=mois,
                              annee=annee)
     except Exception as e:
-        logger.error(f"Error in rapport_financier route: {str(e)}")
-        logger.error(traceback.format_exc())
         return f"An error occurred: {str(e)}", 500
 
 if __name__ == '__main__':
