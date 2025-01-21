@@ -6,7 +6,13 @@
             "use": "@vercel/python",
             "config": {
                 "runtime": "python3.9",
-                "maxLambdaSize": "15mb"
+                "maxLambdaSize": "15mb",
+                "includeFiles": [
+                    "templates/**",
+                    "static/**",
+                    "*.db",
+                    "logs/**"
+                ]
             }
         }
     ],
@@ -23,7 +29,8 @@
     ],
     "env": {
         "FLASK_ENV": "production",
-        "PYTHONPATH": "."
+        "PYTHONPATH": ".",
+        "DEBUG": "1"
     },
     "github": {
         "enabled": true,
