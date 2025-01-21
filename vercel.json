@@ -2,29 +2,25 @@
     "version": 2,
     "builds": [
         {
-            "src": "wsgi.py",
-            "use": "@vercel/python",
-            "config": {
-                "maxLambdaSize": "15mb",
-                "runtime": "python3.9",
-                "includeFiles": [
-                    "templates/**",
-                    "static/**",
-                    "*.db"
-                ]
-            }
+            "src": "api/index.py",
+            "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "wsgi.py"
+            "dest": "api/index.py",
+            "headers": {
+                "cache-control": "s-maxage=1, stale-while-revalidate=59",
+                "pragma": "no-cache",
+                "expires": "0"
+            }
         }
     ],
-    "env": {
-        "FLASK_ENV": "production",
-        "PYTHONPATH": ".",
-        "DATABASE_URL": "sqlite:///cabinet_medical.db"
+    "github": {
+        "enabled": true,
+        "silent": false,
+        "autoAlias": true
     },
     "buildCommand": "pip install -r requirements.txt",
     "outputDirectory": ".",

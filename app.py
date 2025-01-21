@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import datetime, timedelta
 from sqlalchemy import func, and_
 import calendar
@@ -11,14 +12,13 @@ DB_PATH = os.path.join(BASE_DIR, 'cabinet_medical.db')
 
 # Create Flask app
 app = Flask(__name__)
-
-# Configure database
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key_for_medical_management')
+app.config['SECRET_KEY'] = 'votre_clé_secrète_ici'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{DB_PATH}')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Ensure the database directory exists
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)

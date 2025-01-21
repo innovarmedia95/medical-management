@@ -13,65 +13,37 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 try:
-    from flask import Flask, request, jsonify, render_template
-    from app import app as application, db
+    from flask import Flask, request, jsonify
+    from app import app, db
 except Exception as import_error:
     logger.error(f"Import Error: {import_error}")
     logger.error(traceback.format_exc())
     raise
 
-# Wrap the main application for Vercel with error handling
-def handler(event, context):
-    try:
-        return {
-            'statusCode': 200,
-            'body': 'Medical Management Application'
-        }
-    except Exception as e:
-        logger.error(f"Handler Error: {e}")
-        logger.error(traceback.format_exc())
-        return {
-            'statusCode': 500,
-            'body': f'Application Error: {str(e)}'
-        }
+# This file is specifically for Vercel deployment
+# It ensures the database is properly initialized
 
-# Ensure routes are accessible with error handling
-@application.route('/')
-def index():
-    try:
-        return render_template('accueil.html')
-    except Exception as e:
-        logger.error(f"Index Route Error: {e}")
-        logger.error(traceback.format_exc())
-        return f"Error rendering page: {str(e)}", 500
-
-# Database initialization endpoint
-@application.route('/api/init-db', methods=['GET'])
+@app.route('/api/init-db', methods=['GET'])
 def init_database():
     try:
         # Create all tables if they don't exist
-        with application.app_context():
+        with app.app_context():
             db.create_all()
         return jsonify({"status": "Database initialized successfully"}), 200
     except Exception as e:
-        logger.error(f"Database Initialization Error: {e}")
-        logger.error(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
-# Make the application directly callable for Vercel
-def app(environ, start_response):
-    try:
-        return application(environ, start_response)
-    except Exception as e:
-        logger.error(f"WSGI Application Error: {e}")
-        logger.error(traceback.format_exc())
-        # Implement a basic error response
-        status = '500 Internal Server Error'
-        response_headers = [('Content-type', 'text/plain')]
-        start_response(status, response_headers)
-        return [b'An error occurred while processing the request']
+# Vercel requires a handler for the main route
+def handler(event, context):
+    return {
+        'statusCode': 200,
+        'body': 'Database initialization endpoint'
+    }
 
-# Expose the application for Vercel
+# Ensure the app can be imported and used by Vercel
+def app(environ, start_response):
+    return app(environ, start_response)
+
 __all__ = ['app', 'handler']
 
 # Log startup
