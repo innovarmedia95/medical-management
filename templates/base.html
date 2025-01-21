@@ -18,15 +18,6 @@
             background-color: #f3f4f6;
         }
 
-        /* Card styles */
-        .stat-card {
-            @apply bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg;
-        }
-
-        .stat-icon {
-            @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl;
-        }
-
         /* Navigation styles */
         .nav-link {
             @apply px-4 py-2 rounded-lg transition-all duration-200;
@@ -55,7 +46,7 @@
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-green-600 shadow-lg">
+    <nav class="bg-green-500 shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16">
                 <div class="flex">
@@ -70,27 +61,27 @@
                     <!-- Primary Navigation -->
                     <div class="hidden md:ml-6 md:flex md:space-x-8">
                         <a href="{{ url_for('accueil') }}" 
-                           class="{% if request.endpoint == 'accueil' %}border-white text-white{% else %}border-transparent text-green-100{% endif %} 
+                           class="{% if request.endpoint == 'accueil' %}border-white text-white{% else %}border-transparent text-green-50{% endif %} 
                                   hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-home mr-1"></i> Accueil
                         </a>
                         <a href="{{ url_for('liste_patients') }}"
-                           class="{% if request.endpoint == 'liste_patients' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                           class="{% if request.endpoint == 'liste_patients' %}border-white text-white{% else %}border-transparent text-green-50{% endif %}
                                   hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-users mr-1"></i> Patients
                         </a>
                         <a href="{{ url_for('calendrier') }}"
-                           class="{% if request.endpoint == 'calendrier' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                           class="{% if request.endpoint == 'calendrier' %}border-white text-white{% else %}border-transparent text-green-50{% endif %}
                                   hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-calendar-alt mr-1"></i> Calendrier
                         </a>
                         <a href="{{ url_for('statistiques') }}"
-                           class="{% if request.endpoint == 'statistiques' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                           class="{% if request.endpoint == 'statistiques' %}border-white text-white{% else %}border-transparent text-green-50{% endif %}
                                   hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-chart-bar mr-1"></i> Statistiques
                         </a>
                         <a href="{{ url_for('rapport_financier') }}"
-                           class="{% if request.endpoint == 'rapport_financier' %}border-white text-white{% else %}border-transparent text-green-100{% endif %}
+                           class="{% if request.endpoint == 'rapport_financier' %}border-white text-white{% else %}border-transparent text-green-50{% endif %}
                                   hover:text-white hover:border-green-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-file-invoice-dollar mr-1"></i> Finances
                         </a>
@@ -99,7 +90,7 @@
 
                 <!-- Mobile menu button -->
                 <div class="flex items-center md:hidden">
-                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-green-100 hover:text-white hover:bg-green-700">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-green-100 hover:text-white hover:bg-green-600">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -110,28 +101,28 @@
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="{{ url_for('accueil') }}" 
-                   class="{% if request.endpoint == 'accueil' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
-                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
+                   class="{% if request.endpoint == 'accueil' %}bg-green-600 text-white{% else %}text-green-50{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-600 hover:text-white">
                     <i class="fas fa-home mr-2"></i> Accueil
                 </a>
                 <a href="{{ url_for('liste_patients') }}"
-                   class="{% if request.endpoint == 'liste_patients' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
-                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
+                   class="{% if request.endpoint == 'liste_patients' %}bg-green-600 text-white{% else %}text-green-50{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-600 hover:text-white">
                     <i class="fas fa-users mr-2"></i> Patients
                 </a>
                 <a href="{{ url_for('calendrier') }}"
-                   class="{% if request.endpoint == 'calendrier' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
-                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
+                   class="{% if request.endpoint == 'calendrier' %}bg-green-600 text-white{% else %}text-green-50{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-600 hover:text-white">
                     <i class="fas fa-calendar-alt mr-2"></i> Calendrier
                 </a>
                 <a href="{{ url_for('statistiques') }}"
-                   class="{% if request.endpoint == 'statistiques' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
-                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
+                   class="{% if request.endpoint == 'statistiques' %}bg-green-600 text-white{% else %}text-green-50{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-600 hover:text-white">
                     <i class="fas fa-chart-bar mr-2"></i> Statistiques
                 </a>
                 <a href="{{ url_for('rapport_financier') }}"
-                   class="{% if request.endpoint == 'rapport_financier' %}bg-green-700 text-white{% else %}text-green-100{% endif %}
-                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-700 hover:text-white">
+                   class="{% if request.endpoint == 'rapport_financier' %}bg-green-600 text-white{% else %}text-green-50{% endif %}
+                          block pl-3 pr-4 py-2 text-base font-medium hover:bg-green-600 hover:text-white">
                     <i class="fas fa-file-invoice-dollar mr-2"></i> Finances
                 </a>
             </div>
